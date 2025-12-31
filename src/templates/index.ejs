@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>skyler</title>
+    <meta name="description" content="skyler's personal blog">
+    <link rel="stylesheet" href="/assets/css/main.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><a href="/">skyler</a></h1>
+        </header>
+
+        <main>
+            <ul class="post-list">
+                <% posts.forEach(post => { %>
+                <li class="post-item">
+                    <a href="/posts/<%= post.slug %>.html">
+                        <h2 class="post-title"><%= post.title %></h2>
+                        <time class="post-date"><%= post.dateFormatted %></time>
+                    </a>
+                </li>
+                <% }) %>
+            </ul>
+
+            <% if (totalPages > 1) { %>
+            <nav class="pagination">
+                <% for (let i = 1; i <= totalPages; i++) { %>
+                    <% if (i === currentPage) { %>
+                        <span class="current"><%= i %></span>
+                    <% } else { %>
+                        <a href="<%= i === 1 ? '/' : '/page/' + i + '.html' %>"><%= i %></a>
+                    <% } %>
+                <% } %>
+            </nav>
+            <% } %>
+        </main>
+    </div>
+</body>
+</html>

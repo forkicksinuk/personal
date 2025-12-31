@@ -1,0 +1,15 @@
+{
+  "name": "skyler-blog",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "bun src/build.js",
+    "dev": "bun src/build.js && bunx serve dist"
+  },
+  "dependencies": {
+    "ejs": "^3.1.10",
+    "gray-matter": "^4.0.3",
+    "highlight.js": "^11.11.1",
+    "marked": "^17.0.1"
+  }
+}
