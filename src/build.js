@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
 import { marked } from "marked";
+import { markedHighlight } from "marked-highlight";
 import hljs from "highlight.js";
 import ejs from "ejs";
 
@@ -11,18 +12,24 @@ const DIST_DIR = "./dist";
 const TEMPLATES_DIR = "./src/templates";
 const STYLES_DIR = "./src/styles";
 
-// Configure marked with highlight.js
-marked.setOptions({
-  highlight: function (code, lang) {
-    if (lang && hljs.getLanguage(lang)) {
-      try {
-        return hljs.highlight(code, { language: lang }).value;
-      } catch (e) {
-        console.error("Highlight error:", e);
+// Configure marked with highlight.js using marked-highlight extension
+marked.use(
+  markedHighlight({
+    langPrefix: "hljs language-",
+    highlight(code, lang) {
+      if (lang && hljs.getLanguage(lang)) {
+        try {
+          return hljs.highlight(code, { language: lang }).value;
+        } catch (e) {
+          console.error("Highlight error:", e);
+        }
       }
-    }
-    return hljs.highlightAuto(code).value;
-  },
+      return hljs.highlightAuto(code).value;
+    },
+  })
+);
+
+marked.setOptions({
   breaks: false,
   gfm: true,
 });
