@@ -1,27 +1,36 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= typeof title !== 'undefined' ? title + ' - skyler' : 'skyler' %></title>
-    <meta name="description" content="<%= typeof description !== 'undefined' ? description : 'skyler\'s personal blog' %>">
-    <link rel="stylesheet" href="/assets/css/main.css">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      <%= typeof title !== 'undefined' ? title + ' - skyler' : 'skyler' %>
+    </title>
+    <meta
+      name="description"
+      content="<%= typeof description !== 'undefined' ? description : 'skyler\'s personal blog' %>"
+    />
+    <link rel="stylesheet" href="/assets/css/main.css" />
     <% if (typeof needKatex !== 'undefined' && needKatex) { %>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet" href="/assets/lib/katex/katex.min.css" />
     <% } %>
-</head>
-<body>
+  </head>
+  <body>
     <div class="container">
-        <header>
-            <h1><a href="/">skyler</a></h1>
-        </header>
+      <header>
+        <h1><a href="/">skyler</a></h1>
+      </header>
 
-        <%- body %>
+      <%- body %>
     </div>
 
     <% if (typeof needKatex !== 'undefined' && needKatex) { %>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]});"></script>
+    <script defer src="/assets/lib/katex/katex.min.js"></script>
+    <script
+      defer
+      src="/assets/lib/katex/contrib/auto-render.min.js"
+      onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]});"
+    ></script>
     <% } %>
-</body>
+  </body>
 </html>

@@ -6,10 +6,7 @@
     <title><%= post.title %> - skyler</title>
     <meta name="description" content="<%= post.title %>" />
     <link rel="stylesheet" href="/assets/css/main.css" />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"
-    />
+    <link rel="stylesheet" href="/assets/lib/katex/katex.min.css" />
   </head>
   <body>
     <div class="container">
@@ -63,13 +60,10 @@
       </article>
     </div>
 
+    <script defer src="/assets/lib/katex/katex.min.js"></script>
     <script
       defer
-      src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"
-    ></script>
-    <script
-      defer
-      src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+      src="/assets/lib/katex/contrib/auto-render.min.js"
       onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]});"
     ></script>
   </body>

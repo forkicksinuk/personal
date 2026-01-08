@@ -52,6 +52,8 @@ function cleanDist() {
   ensureDir(path.join(DIST_DIR, "posts"));
   ensureDir(path.join(DIST_DIR, "page"));
   ensureDir(path.join(DIST_DIR, "assets", "css"));
+  ensureDir(path.join(DIST_DIR, "assets", "lib", "katex", "fonts"));
+  ensureDir(path.join(DIST_DIR, "assets", "lib", "katex", "contrib"));
 }
 
 // Copy CSS files
@@ -66,6 +68,38 @@ function copyCss() {
     }
   }
   console.log("CSS files copied.");
+}
+
+// Copy KaTeX files from node_modules
+function copyKatex() {
+  const katexSrc = "./node_modules/katex/dist";
+  const katexDest = path.join(DIST_DIR, "assets", "lib", "katex");
+
+  // Copy main KaTeX files
+  fs.copyFileSync(
+    path.join(katexSrc, "katex.min.css"),
+    path.join(katexDest, "katex.min.css")
+  );
+  fs.copyFileSync(
+    path.join(katexSrc, "katex.min.js"),
+    path.join(katexDest, "katex.min.js")
+  );
+
+  // Copy auto-render contrib
+  fs.copyFileSync(
+    path.join(katexSrc, "contrib", "auto-render.min.js"),
+    path.join(katexDest, "contrib", "auto-render.min.js")
+  );
+
+  // Copy fonts
+  const fontsDir = path.join(katexSrc, "fonts");
+  const fontsDest = path.join(katexDest, "fonts");
+  const fonts = fs.readdirSync(fontsDir);
+  for (const font of fonts) {
+    fs.copyFileSync(path.join(fontsDir, font), path.join(fontsDest, font));
+  }
+
+  console.log("KaTeX files copied.");
 }
 
 // Read and parse all posts
@@ -168,6 +202,9 @@ function build() {
 
   // Copy CSS
   copyCss();
+
+  // Copy KaTeX
+  copyKatex();
 
   // Get all posts
   const posts = getPosts();
