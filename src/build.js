@@ -1,6 +1,5 @@
 import fs from 'fs';
 import path from 'path';
-import matter from 'gray-matter';
 import { marked } from 'marked';
 import hljs from 'highlight.js';
 import ejs from 'ejs';
@@ -85,19 +84,27 @@ function getPosts() {
     }
 
     const posts = files.map((file) => {
-        const content = fs.readFileSync(path.join(DOCS_DIR, file), 'utf-8');
-        const { data, content: body } = matter(content);
+        const filePath = path.join(DOCS_DIR, file);
+        const content = fs.readFileSync(filePath, 'utf-8');
+        const stats = fs.statSync(filePath);
 
-        // Parse date
-        let date = data.date ? new Date(data.date) : new Date();
+        // 标题：直接用文件名（去掉 .md）
+        const title = file.replace('.md', '');
+        
+        // 创建日期：文件 birthtime
+        const date = stats.birthtime;
+        
+        // 更新日期：文件 mtime
+        const updatedDate = stats.mtime;
 
         return {
             slug: file.replace('.md', ''),
-            title: data.title || file.replace('.md', ''),
-            date: date,
+            title,
+            date,
             dateFormatted: formatDate(date),
-            html: marked.parse(body),
-            ...data,
+            updatedDate,
+            updatedDateFormatted: formatDate(updatedDate),
+            html: marked.parse(content),  // 直接解析整个内容，无需 gray-matter
         };
     });
 

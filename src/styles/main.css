@@ -176,6 +176,12 @@ article {
     color: var(--text-muted);
 }
 
+.post-updated {
+    font-size: 14px;
+    color: var(--text-muted);
+    margin-left: 16px;
+}
+
 /* Post content */
 .post-content {
     font-size: 17px;
