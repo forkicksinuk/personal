@@ -19,7 +19,8 @@
                 <li class="post-item">
                     <a href="/posts/<%= post.slug %>.html">
                         <h2 class="post-title"><%= post.title %></h2>
-                        <time class="post-date"><%= post.dateFormatted %></time>
+                        <time class="post-date">创建：<%= post.createdAtFormatted %></time>
+                        <time class="post-updated">更新：<%= post.updatedAtFormatted %></time>
                     </a>
                 </li>
                 <% }) %>

@@ -34,13 +34,42 @@ marked.setOptions({
   gfm: true,
 });
 
-// Format date to Chinese format
-function formatDate(date) {
-  const d = new Date(date);
-  const year = d.getFullYear();
-  const month = d.getMonth() + 1;
-  const day = d.getDate();
-  return `${year} 年 ${month} 月 ${day} 日`;
+function parseFrontmatter(content) {
+  const match = content.match(/^---\s*\r?\n([\s\S]*?)\r?\n---\s*\r?\n?/);
+  if (!match) {
+    return { data: {}, body: content };
+  }
+
+  const data = {};
+  const lines = match[1].split(/\r?\n/);
+  for (const line of lines) {
+    const trimmed = line.trim();
+    if (!trimmed || trimmed.startsWith("#")) {
+      continue;
+    }
+    const sepIndex = trimmed.indexOf(":");
+    if (sepIndex == -1) {
+      continue;
+    }
+    const key = trimmed.slice(0, sepIndex).trim();
+    const value = trimmed.slice(sepIndex + 1).trim();
+    if (key) {
+      data[key] = value;
+    }
+  }
+
+  return { data, body: content.slice(match[0].length) };
+}
+
+function parseFrontmatterDate(value) {
+  if (!value) {
+    return null;
+  }
+  const parsed = new Date(value);
+  if (Number.isNaN(parsed.getTime())) {
+    return null;
+  }
+  return parsed;
 }
 
 // Ensure directory exists
@@ -127,25 +156,33 @@ function getPosts() {
   const posts = files.map((file) => {
     const filePath = path.join(DOCS_DIR, file);
     const content = fs.readFileSync(filePath, "utf-8");
-    const stats = fs.statSync(filePath);
+    const frontmatter = parseFrontmatter(content);
+    const createdText = frontmatter.data.created || "";
+    const updatedText = frontmatter.data.updated || "";
 
     // 标题：直接用文件名（去掉 .md）
     const title = file.replace(".md", "");
 
-    // 使用文件的最后修改时间（mtime）作为日期
-    const date = stats.mtime;
+    const createdAt = parseFrontmatterDate(createdText);
+    const updatedAt = parseFrontmatterDate(updatedText);
 
     return {
       slug: file.replace(".md", ""),
       title,
-      date,
-      dateFormatted: formatDate(date),
-      html: marked.parse(content), // 直接解析整个内容，无需 gray-matter
+      createdAt,
+      updatedAt,
+      createdAtFormatted: createdText,
+      updatedAtFormatted: updatedText,
+      html: marked.parse(frontmatter.body), // 直接解析整个内容，无需 gray-matter
     };
   });
 
-  // Sort by date descending (newest first)
-  posts.sort((a, b) => b.date - a.date);
+  // Sort by createdAt descending (newest first)
+  posts.sort(
+    (a, b) =>
+      (b.createdAt ? b.createdAt.getTime() : 0) -
+      (a.createdAt ? a.createdAt.getTime() : 0)
+  );
 
   // Add prev/next links
   posts.forEach((post, i) => {
